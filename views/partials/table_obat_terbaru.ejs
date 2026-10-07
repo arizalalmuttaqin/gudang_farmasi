@@ -1,0 +1,73 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6">
+    <div class="px-6 py-5 border-b border-gray-200 bg-gray-50/50">
+        <h2 class="text-xl font-bold text-gray-900">Riwayat Obat Masuk</h2>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-50 text-gray-700 text-sm border-b border-gray-200">
+                    <th class="px-6 py-3 font-semibold">No</th>
+                    <th class="px-6 py-3 font-semibold">Nama Obat</th>
+                    <th class="px-6 py-3 font-semibold">Jumlah</th>
+                    <th class="px-6 py-3 font-semibold">Tgl Masuk</th>
+                    <th class="px-6 py-3 font-semibold">Kedaluwarsa</th>
+                    <th class="px-6 py-3 font-semibold text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-sm text-gray-700">
+                
+                <!-- Cek apakah data kosong -->
+                <% if (dataMasuk.length === 0) { %>
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                            Belum ada riwayat obat masuk.
+                        </td>
+                    </tr>
+                <% } else { %>
+                    <!-- Looping data dari database -->
+                    <% dataMasuk.forEach((baris, index) => { %>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <!-- Nomor urut otomatis -->
+                            <td class="px-6 py-4"><%= index + 1 %></td>
+                            
+                            <!-- Nama Obat dari hasil JOIN -->
+                            <td class="px-6 py-4 font-medium text-gray-900"><%= baris.nama_obat %></td>
+                            
+                            <td class="px-6 py-4">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    +<%= baris.jumlah_masuk %> Unit
+                                </span>
+                            </td>
+                            
+                            <!-- Memformat tampilan tanggal agar lebih rapi -->
+                            <td class="px-6 py-4">
+                                <%= new Date(baris.tanggal_masuk).toLocaleDateString('id-ID') %>
+                            </td>
+                            
+                            <td class="px-6 py-4 text-red-600">
+                                <%= new Date(baris.tanggal_expired).toLocaleDateString('id-ID') %>
+                            </td>
+
+                            <td class="px-6 py-4 text-center space-x-2">
+                                <!-- Tombol Edit -->
+                                <a href="/edit_masuk/<%= baris.id_masuk %>" 
+                                class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 text-xs font-medium transition">
+                                    Edit
+                                </a>
+                                
+                                <!-- Tombol Hapus (Dilengkapi konfirmasi JavaScript agar tidak sengaja terhapus) -->
+                                <a href="/hapus_masuk/<%= baris.id_masuk %>" 
+                                onclick="return confirm('Yakin ingin menghapus data ini?')"
+                                class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-600 rounded-md hover:bg-red-100 text-xs font-medium transition">
+                                    Hapus
+                                </a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                <% } %>
+                
+            </tbody>
+        </table>
+    </div>
+</div>

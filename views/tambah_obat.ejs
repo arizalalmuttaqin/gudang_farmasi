@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Obat Masuk</title>
+    <!-- Menggunakan Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <main class="max-w-xl mx-auto px-4 sm:px-6 py-10">
+        
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <!-- Header Form -->
+            <div class="px-6 py-5 border-b border-gray-200 bg-gray-50/50 flex justify-between items-center">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900">Catat Obat Masuk</h2>
+                    <p class="text-sm text-gray-500 mt-1">Masukkan detail stok obat yang baru diterima.</p>
+                </div>
+            </div>
+
+            <!-- Form Body -->
+            <form action="/tambah_obat_masuk" method="POST" class="p-6 space-y-6">
+                
+                <!-- Input ID Obat (Dropdown) & Link Tambah Baru -->
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <label for="id_obat" class="block text-sm font-medium text-gray-700">Pilih ID Obat</label>
+                        <!-- Tombol untuk menambah obat baru jika tidak ada di daftar -->
+                        <a href="/tambah_master_obat" class="text-sm font-medium text-blue-600 hover:text-blue-800 flex items-center gap-1 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            Tambah Obat Baru
+                        </a>
+                    </div>
+                    
+                <select name="id_obat" id="id_obat" required onchange="tampilkanNamaObat()"
+                class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white">
+                    <option value="" disabled selected>-- Pilih ID Obat --</option>
+                    <% daftarObat.forEach(function(obat_keseluruhan) { %>
+                        <option value="<%= obat_keseluruhan.id_obat %>" data-nama="<%= obat_keseluruhan.nama_obat %>">
+                            <%= obat_keseluruhan.id_obat %> - <%= obat_keseluruhan.nama_obat %>
+                        </option>
+                    <% }); %>
+                </select>
+                </div>
+
+                <!-- Kolom Penampil Nama Obat (Otomatis / Readonly) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nama Obat</label>
+                    <div class="mt-1">
+                        <input type="text" id="nama_obat_tampil" readonly placeholder="Nama obat akan muncul otomatis..."
+                            class="block w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-gray-600 sm:text-sm cursor-not-allowed">
+                    </div>
+                    <p class="mt-1.5 text-xs text-gray-500">Nama obat disesuaikan dengan ID master obat yang dipilih.</p>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <!-- Input Jumlah Masuk -->
+                <div>
+                    <label for="jumlah_masuk" class="block text-sm font-medium text-gray-700">Jumlah Masuk</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <input type="number" name="jumlah_masuk" id="jumlah_masuk" required min="1" placeholder="0"
+                            class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                            <span class="text-gray-500 sm:text-sm">Unit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Tanggal Expired -->
+                <div>
+                    <label for="tanggal_expired" class="block text-sm font-medium text-gray-700">Tanggal Kedaluwarsa (Expired)</label>
+                    <div class="mt-1">
+                        <input type="date" name="tanggal_expired" id="tanggal_expired" required
+                            class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-700">
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="pt-4 flex items-center justify-end space-x-3 border-t border-gray-100">
+                    <a href="/" class="px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none transition-colors">
+                        Batal
+                    </a>
+                    <button type="submit" class="px-4 py-2.5 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none shadow-sm transition-colors">
+                        Simpan Stok Masuk
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- Script untuk memunculkan nama obat otomatis -->
+    <script>
+        function tampilkanNamaObat() {
+            // Ambil elemen select dan elemen input nama obat
+            const selectObat = document.getElementById('id_obat');
+            const inputNama = document.getElementById('nama_obat_tampil');
+            
+            // Dapatkan opsi yang sedang dipilih
+            const opsiTerpilih = selectObat.options[selectObat.selectedIndex];
+            
+            // Ambil data-nama dari opsi tersebut dan masukkan ke input
+            if(opsiTerpilih.value !== "") {
+                inputNama.value = opsiTerpilih.getAttribute('data-nama');
+            } else {
+                inputNama.value = "";
+            }
+        }
+    </script>
+</body>
+</html>

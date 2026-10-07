@@ -1,0 +1,110 @@
+
+<%-include('partials/head')%>
+
+
+<body class="bg-gray-50 text-gray-800">
+
+   <%-include('partials/nav')%>
+
+    <!-- Main Content -->
+    <main class="p-8 max-w-7xl mx-auto space-y-6">
+        
+        <!-- Greeting -->
+        <div>
+            <h2 class="text-2xl font-bold text-gray-900">Dashboard</h2>
+            <p class="text-gray-500 mt-1">Good morning, <%=namaUser%>. Here is today's pharmacy inventory overview and stock activity.</p>
+        </div>
+
+        <!-- Metric Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Card 1 -->
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <p class="text-sm text-gray-500 font-medium">Total drug units</p>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <h3 class="text-2xl font-bold text-gray-900">24,680</h3>
+                    <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">+1,240 this month</span>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <p class="text-sm text-gray-500 font-medium">Active medicines</p>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <h3 class="text-2xl font-bold text-gray-900">186</h3>
+                    <span class="text-xs font-medium text-gray-500">Across 12 categories</span>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-yellow-400">
+                <p class="text-sm text-gray-500 font-medium">Low stock items</p>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <h3 class="text-2xl font-bold text-gray-900">14</h3>
+                    <span class="text-xs font-medium text-yellow-700 bg-yellow-50 px-2 py-1 rounded-full">6 need urgent reorder</span>
+                </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-red-400">
+                <p class="text-sm text-gray-500 font-medium">Expiring in 90 days</p>
+                <div class="mt-2 flex items-baseline gap-2">
+                    <h3 class="text-2xl font-bold text-gray-900">9</h3>
+                    <span class="text-xs font-medium text-red-700 bg-red-50 px-2 py-1 rounded-full">3 batches within 30 days</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- dua kolom layout untuk table -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Column (Wider) -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Recent Incoming Drugs Table -->
+               <%-include('partials/table_obat_terbaru')%>
+
+                <!-- Latest Outgoing Drugs Table -->
+                <%-include('partials/table_obat_keluar')%>
+            </div>
+
+            <!-- Right Column (Narrower) -->
+            <div class="space-y-6">
+                
+                <!-- Quick Actions Panel -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <h3 class="font-bold text-gray-900 mb-4">Quick actions</h3>
+                    <div class="space-y-3">
+                       <a href="/tambah_obat" class="w-full flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition cursor-pointer">
+                            <div class="w-10 h-10 rounded bg-blue-50 text-blue-600 flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            </div>
+                            <div class="text-left text-sm">
+                                <p class="font-bold text-gray-900">Add Drug</p>
+                                <p class="text-gray-500 text-xs">Register a new incoming medicine</p>
+                            </div>
+                        </a>
+                        <a href="/obat_keluar" class="w-full flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition cursor-pointer">
+                            <div class="w-10 h-10 rounded bg-purple-50 text-purple-600 flex items-center justify-center mr-3">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                            <div class="text-left text-sm">
+                                <p class="font-bold text-gray-900">Record Outgoing</p>
+                                <p class="text-gray-500 text-xs">Issue stock to a ward or clinic</p>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="mt-4 bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-start">
+                        <svg class="w-5 h-5 text-yellow-600 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <div>
+                            <p class="text-sm font-medium text-yellow-800">6 low-stock items</p>
+                            <p class="text-xs text-yellow-700 mt-0.5">Below their minimum reorder level.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expiring Soon Table -->
+                <%-include('partials/table_obat_expired')%>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

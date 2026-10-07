@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Obat Masuk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <main class="max-w-xl mx-auto px-4 sm:px-6 py-10">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            
+            <div class="px-6 py-5 border-b border-gray-200 bg-blue-50/30">
+                <h2 class="text-xl font-bold text-gray-900">Edit Data Obat Masuk</h2>
+                <p class="text-sm text-gray-500 mt-1">Perbarui jumlah atau tanggal kedaluwarsa untuk ID Masuk #<%= dataObat.id_masuk %></p>
+            </div>
+
+            <!-- PERHATIKAN ACTION FORM: Mengarah ke ID yang sedang diedit -->
+            <form action="/edit_masuk/<%= dataObat.id_masuk %>" method="POST" class="p-6 space-y-6">
+                
+                <!-- ID Obat (Dibuat Readonly karena biasanya ID Obat tidak diubah saat edit transaksi) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">ID Obat</label>
+                    <div class="mt-1">
+                        <input type="text" value="<%= dataObat.id_obat %>" readonly
+                            class="block w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-gray-600 sm:text-sm cursor-not-allowed">
+                    </div>
+                </div>
+
+                <!-- Input Jumlah Masuk -->
+                <div>
+                    <label for="jumlah_masuk" class="block text-sm font-medium text-gray-700">Jumlah Masuk</label>
+                    <div class="mt-1 relative rounded-md shadow-sm">
+                        <!-- PERHATIKAN ATRIBUT VALUE DI BAWAH INI -->
+                        <input type="number" name="jumlah_masuk" id="jumlah_masuk" required min="1" 
+                            value="<%= dataObat.jumlah_masuk %>"
+                            class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                            <span class="text-gray-500 sm:text-sm">Unit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Tanggal Expired -->
+                <div>
+                    <label for="tanggal_expired" class="block text-sm font-medium text-gray-700">Tanggal Kedaluwarsa (Expired)</label>
+                    <div class="mt-1">
+                        <!-- SCRIPT KECIL EJS: Memformat objek tanggal dari MySQL menjadi YYYY-MM-DD -->
+                        <% 
+                            let tgl = new Date(dataObat.tanggal_expired);
+                            let yyyy = tgl.getFullYear();
+                            let mm = String(tgl.getMonth() + 1).padStart(2, '0');
+                            let dd = String(tgl.getDate()).padStart(2, '0');
+                            let formatBaku = `${yyyy}-${mm}-${dd}`;
+                        %>
+                        <!-- PERHATIKAN ATRIBUT VALUE DI BAWAH INI -->
+                        <input type="date" name="tanggal_expired" id="tanggal_expired" required
+                            value="<%= formatBaku %>"
+                            class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm text-gray-700">
+                    </div>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="pt-4 flex items-center justify-end space-x-3 border-t border-gray-100">
+                    <a href="/riwayat_masuk" class="px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                        Batal
+                    </a>
+                    <button type="submit" class="px-4 py-2.5 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 shadow-sm transition-colors">
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

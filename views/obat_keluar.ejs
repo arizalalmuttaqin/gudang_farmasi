@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catat Obat Keluar</title>
+    <!-- Menggunakan Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <main class="max-w-xl mx-auto px-4 sm:px-6 py-10">
+        
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+            <!-- Header Form -->
+            <div class="px-6 py-5 border-b border-gray-200 bg-red-50/30">
+                <h2 class="text-xl font-bold text-gray-900">Catat Obat Keluar</h2>
+                <p class="text-sm text-gray-500 mt-1">Keluarkan stok obat untuk pasien, bangsal, atau keperluan lainnya.</p>
+            </div>
+
+            <!-- Form Body -->
+            <form action="/tambah_obat_keluar" method="POST" class="p-6 space-y-6">
+                
+                <!-- Input ID Obat (Dropdown) -->
+                <div>
+                    <label for="id_obat" class="block text-sm font-medium text-gray-700 mb-1">Pilih ID Obat</label>
+                   <select name="id_obat" id="id_obat" required onchange="tampilkanNamaObat()"
+                class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white">
+                    <option value="" disabled selected>-- Pilih ID Obat --</option>
+                    <% daftarObat.forEach(function(obat_keseluruhan) { %>
+                        <option value="<%= obat_keseluruhan.id_obat %>" data-nama="<%= obat_keseluruhan.nama_obat %>">
+                            <%= obat_keseluruhan.id_obat %> - <%= obat_keseluruhan.nama_obat %>
+                        </option>
+                    <% }); %>
+                </select>
+                </div>
+
+                <!-- Kolom Penampil Nama Obat (Otomatis / Readonly) -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nama Obat</label>
+                    <div class="mt-1">
+                        <input type="text" id="nama_obat_tampil" readonly placeholder="Nama obat akan muncul otomatis..."
+                            class="block w-full px-4 py-2.5 bg-gray-100 border border-gray-200 rounded-lg text-gray-600 sm:text-sm cursor-not-allowed">
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Input Jumlah Keluar -->
+                    <div>
+                        <label for="jumlah_keluar" class="block text-sm font-medium text-gray-700">Jumlah Keluar</label>
+                        <div class="mt-1 relative rounded-md shadow-sm">
+                            <input type="number" name="jumlah_keluar" id="jumlah_keluar" required min="1" placeholder="0"
+                                class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                <span class="text-gray-500 sm:text-sm">Unit</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Tanggal Keluar -->
+                    <div>
+                        <label for="tanggal_keluar" class="block text-sm font-medium text-gray-700">Tanggal Keluar</label>
+                        <div class="mt-1">
+                            <!-- Value diisi otomatis oleh JS nanti saat di EJS, tapi untuk form HTML kita pakai tipe date biasa -->
+                            <input type="date" name="tanggal_keluar" id="tanggal_keluar" required
+                                class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm text-gray-700">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Keterangan -->
+                <div>
+                    <label for="keterangan" class="block text-sm font-medium text-gray-700">Keterangan / Tujuan</label>
+                    <div class="mt-1">
+                        <textarea name="keterangan" id="keterangan" rows="3" required placeholder="Contoh: Diberikan ke Poli Gigi / Resep Pasien A / Kedaluwarsa"
+                            class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm"></textarea>
+                    </div>
+                    <p class="mt-1.5 text-xs text-gray-500">Tuliskan tujuan kemana obat ini dikeluarkan atau alasan pengeluarannya.</p>
+                </div>
+
+                <!-- Tombol Aksi -->
+                <div class="pt-4 flex items-center justify-end space-x-3 border-t border-gray-100">
+                    <a href="/" class="px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none transition-colors">
+                        Batal
+                    </a>
+                    <!-- Warna tombol disesuaikan menjadi merah/orange untuk menandakan aksi pengurangan stok -->
+                    <button type="submit" class="px-4 py-2.5 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none shadow-sm transition-colors">
+                        Simpan Pengeluaran
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- Script untuk memunculkan nama obat otomatis -->
+    <script>
+        function tampilkanNamaObat() {
+            const selectObat = document.getElementById('id_obat');
+            const inputNama = document.getElementById('nama_obat_tampil');
+            
+            const opsiTerpilih = selectObat.options[selectObat.selectedIndex];
+            
+            if(opsiTerpilih.value !== "") {
+                inputNama.value = opsiTerpilih.getAttribute('data-nama');
+            } else {
+                inputNama.value = "";
+            }
+        }
+
+        // Opsional: Set otomatis input tanggal ke hari ini
+        document.getElementById('tanggal_keluar').valueAsDate = new Date();
+    </script>
+</body>
+</html>

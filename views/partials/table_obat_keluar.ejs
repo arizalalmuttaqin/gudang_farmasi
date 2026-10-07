@@ -1,0 +1,69 @@
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+        <div>
+            <h3 class="font-bold text-gray-900">Latest Outgoing Drugs</h3>
+            <p class="text-xs text-gray-500 mt-1">Riwayat pengeluaran obat terbaru</p>
+        </div>
+        <a href="/riwayat_keluar" class="text-sm text-blue-600 hover:underline">View all &rarr;</a>
+    </div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm">
+            <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+                <tr>
+                    <th class="px-6 py-3 font-medium">Nama Obat</th>
+                    <th class="px-6 py-3 font-medium">Jumlah</th>
+                    <th class="px-6 py-3 font-medium">Tanggal</th>
+                    <th class="px-6 py-3 font-medium">Keterangan</th>
+                    <th class="px-6 py-3 font-medium text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                
+                <% if (dataObatKeluar.length === 0) { %>
+                    <tr>
+                        <!-- 2. Ubah colspan menjadi 5 -->
+                        <td colspan="5" class="px-6 py-8 text-center text-gray-500">
+                            Belum ada riwayat obat keluar.
+                        </td>
+                    </tr>
+                <% } else { %>
+                    <% dataObatKeluar.forEach(function(keluar) { %>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4 font-medium text-gray-900">
+                                <%= keluar.nama_obat %>
+                            </td>
+                            <td class="px-6 py-4 text-red-600 font-medium">
+                                -<%= keluar.jumlah_keluar %> Unit
+                            </td>
+                            <td class="px-6 py-4 text-gray-500">
+                                <% 
+                                    const tgl = new Date(keluar.tanggal_keluar);
+                                    const formatTgl = tgl.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+                                %>
+                                <%= formatTgl %>
+                            </td>
+                            <td class="px-6 py-4 text-gray-700 font-medium">
+                                <%= keluar.keterangan %>
+                            </td>
+                            
+                            <!-- 3. Tambahkan Kolom Tombol Aksi -->
+                            <td class="px-6 py-4 text-center space-x-2">
+                                <a href="/edit_keluar/<%= keluar.id_keluar %>" 
+                                   class="inline-flex items-center px-3 py-1.5 bg-blue-50 text-blue-600 rounded-md hover:bg-blue-100 text-xs font-medium transition">
+                                    Edit
+                                </a>
+                                <a href="/hapus_keluar/<%= keluar.id_keluar %>" 
+                                   onclick="return confirm('Yakin ingin menghapus riwayat ini? Stok obat akan dikembalikan.')"
+                                   class="inline-flex items-center px-3 py-1.5 bg-red-50 text-red-600 rounded-md hover:bg-red-100 text-xs font-medium transition">
+                                    Hapus
+                                </a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } %>
+                
+            </tbody>
+        </table>
+    </div>
+</div>
